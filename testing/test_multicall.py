@@ -131,7 +131,7 @@ def test_hookwrapper_too_many_yield() -> None:
     with pytest.raises(RuntimeError) as ex:
         MC([m1], {})
     assert "m1" in str(ex.value)
-    assert (__file__ + ":") in str(ex.value)
+    assert f"{__file__}:" in str(ex.value)
 
 
 @pytest.mark.parametrize("exc", [ValueError, SystemExit])

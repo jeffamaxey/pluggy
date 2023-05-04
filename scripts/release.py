@@ -45,10 +45,7 @@ def pre_release(version):
 
 
 def changelog(version, write_out=False):
-    if write_out:
-        addopts = []
-    else:
-        addopts = ["--draft"]
+    addopts = [] if write_out else ["--draft"]
     print(f"{Fore.CYAN}Generating CHANGELOG")
     check_call(["towncrier", "--yes", "--version", version] + addopts)
 

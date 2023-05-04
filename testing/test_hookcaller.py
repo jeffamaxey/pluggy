@@ -326,7 +326,7 @@ def test_hookrelay_registry(pm: PluginManager) -> None:
     pm.add_hookspecs(Api)
     hook = pm.hook
     assert hasattr(hook, "hello")
-    assert repr(hook.hello).find("hello") != -1
+    assert "hello" in repr(hook.hello)
 
     class Plugin:
         @hookimpl

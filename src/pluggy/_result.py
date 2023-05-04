@@ -82,6 +82,5 @@ class _Result(Generic[_T]):
         __tracebackhide__ = True
         if self._excinfo is None:
             return cast(_T, self._result)
-        else:
-            ex = self._excinfo
-            raise ex[1].with_traceback(ex[2])
+        ex = self._excinfo
+        raise ex[1].with_traceback(ex[2])

@@ -114,7 +114,7 @@ class HookspecMarker:
                 "historic": historic,
                 "warn_on_impl": warn_on_impl,
             }
-            setattr(func, self.project_name + "_spec", opts)
+            setattr(func, f"{self.project_name}_spec", opts)
             return func
 
         if function is not None:
@@ -206,7 +206,7 @@ class HookimplMarker:
                 "trylast": trylast,
                 "specname": specname,
             }
-            setattr(func, self.project_name + "_impl", opts)
+            setattr(func, f"{self.project_name}_impl", opts)
             return func
 
         if function is None:
@@ -258,10 +258,7 @@ def varnames(func: object) -> Tuple[Tuple[str, ...], Tuple[str, ...]]:
 
     # strip any implicit instance arg
     # pypy3 uses "obj" instead of "self" for default dunder methods
-    if not _PYPY:
-        implicit_names: Tuple[str, ...] = ("self",)
-    else:
-        implicit_names = ("self", "obj")
+    implicit_names = ("self", "obj") if _PYPY else ("self", )
     if args:
         qualname: str = getattr(func, "__qualname__", "")
         if inspect.ismethod(func) or ("." in qualname and args[0] in implicit_names):
@@ -338,12 +335,10 @@ class _HookCaller:
 
     def _add_hookimpl(self, hookimpl: "HookImpl") -> None:
         """Add an implementation to the callback chain."""
-        for i, method in enumerate(self._hookimpls):
-            if method.hookwrapper:
-                splitpoint = i
-                break
-        else:
-            splitpoint = len(self._hookimpls)
+        splitpoint = next(
+            (i for i, method in enumerate(self._hookimpls) if method.hookwrapper),
+            len(self._hookimpls),
+        )
         if hookimpl.hookwrapper:
             start, end = splitpoint, len(self._hookimpls)
         else:
@@ -375,8 +370,7 @@ class _HookCaller:
                         if argname not in kwargs.keys()
                     )
                     warnings.warn(
-                        "Argument(s) {} which are declared in the hookspec "
-                        "cannot be found in this hook call".format(notincall),
+                        f"Argument(s) {notincall} which are declared in the hookspec cannot be found in this hook call",
                         stacklevel=2,
                     )
                     break

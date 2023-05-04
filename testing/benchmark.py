@@ -23,12 +23,12 @@ def wrapper(arg1, arg2, arg3):
 
 @pytest.fixture(params=[10, 100], ids="hooks={}".format)
 def hooks(request):
-    return [hook for i in range(request.param)]
+    return [hook for _ in range(request.param)]
 
 
 @pytest.fixture(params=[10, 100], ids="wrappers={}".format)
 def wrappers(request):
-    return [wrapper for i in range(request.param)]
+    return [wrapper for _ in range(request.param)]
 
 
 def test_hook_and_wrappers_speed(benchmark, hooks, wrappers):

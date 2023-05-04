@@ -4,11 +4,11 @@ import eggsample
 @eggsample.hookimpl
 def eggsample_add_ingredients(ingredients):
     """Here the caller expects us to return a list."""
-    if "egg" in ingredients:
-        spam = ["lovely spam", "wonderous spam"]
-    else:
-        spam = ["splendiferous spam", "magnificent spam"]
-    return spam
+    return (
+        ["lovely spam", "wonderous spam"]
+        if "egg" in ingredients
+        else ["splendiferous spam", "magnificent spam"]
+    )
 
 
 @eggsample.hookimpl

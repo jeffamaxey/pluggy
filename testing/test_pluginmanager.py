@@ -299,7 +299,7 @@ def test_with_result_memorized(pm: PluginManager, result_callback: bool) -> None
     if result_callback:
         assert out == [10, 10]
     else:
-        assert out == []
+        assert not out
 
 
 def test_with_callbacks_immediately_executed(pm: PluginManager) -> None:
@@ -371,6 +371,7 @@ def test_call_extra(pm: PluginManager) -> None:
 
 
 def test_call_with_too_few_args(pm: PluginManager) -> None:
+
     class Hooks:
         @hookspec
         def he_method1(self, arg):
@@ -378,10 +379,13 @@ def test_call_with_too_few_args(pm: PluginManager) -> None:
 
     pm.add_hookspecs(Hooks)
 
+
+
     class Plugin1:
         @hookimpl
         def he_method1(self, arg):
-            0 / 0
+            1
+
 
     pm.register(Plugin1())
     with pytest.raises(HookCallError):
@@ -390,6 +394,7 @@ def test_call_with_too_few_args(pm: PluginManager) -> None:
 
 
 def test_subset_hook_caller(pm: PluginManager) -> None:
+
     class Hooks:
         @hookspec
         def he_method1(self, arg):
@@ -432,7 +437,7 @@ def test_subset_hook_caller(pm: PluginManager) -> None:
 
     pm.unregister(plugin1)
     hc(arg=2)
-    assert out == []
+    assert not out
     out[:] = []
 
     pm.hook.he_method1(arg=1)
